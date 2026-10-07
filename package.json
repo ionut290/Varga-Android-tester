@@ -1,12 +1,8 @@
 {
-  "name": "varga-android-tester",
-  "version": "0.1.0",
-  "description": "Desktop Android app tester for APK/AAB builds",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron ."
-  },
-  "devDependencies": {
-    "electron": "^38.0.0"
-  }
+  "name":"varga-android-tester",
+  "version":"0.2.0",
+  "description":"Desktop Android emulator tester for APK and AAB builds",
+  "main":"main.js",
+  "scripts":{"start":"electron ."},
+  "devDependencies":{"electron":"^38.0.0"}
 }
