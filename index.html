@@ -1,0 +1,8 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Varga Android Tester</title><link rel="stylesheet" href="style.css"></head><body>
+<main><header><div><h1>Varga Android Tester</h1><p>Avvia un Android virtuale, installa una build e controlla visivamente l'app.</p></div><span class="badge">v0.1</span></header>
+<section class="grid"><article><h2>1. Ambiente Android</h2><button id="check">Controlla strumenti</button><div id="tools" class="status">Non ancora controllato.</div></article>
+<article><h2>2. Dispositivo virtuale</h2><button id="refresh">Trova dispositivi</button><select id="avd"><option>Nessun dispositivo caricato</option></select><button id="start">Avvia Android</button><div id="avdStatus" class="status"></div></article>
+<article><h2>3. Build da provare</h2><button id="pick">Scegli APK / AAB</button><div id="file" class="file">Nessun file selezionato</div><button id="install">Installa APK</button><div id="installStatus" class="status"></div></article>
+<article><h2>4. Verifica visiva</h2><p>Quando l'app è aperta nell'emulatore, salva lo schermo per controllare barre, pulsanti e layout.</p><button id="shot">Cattura screenshot</button><div id="shotStatus" class="status"></div></article></section>
+<section class="note"><strong>Obiettivo:</strong> testare Varga Cantieri senza modificarne il codice. Il tester comunica con Android tramite ADB.</section></main>
+<script src="renderer.js"></script></body></html>
