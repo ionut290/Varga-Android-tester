@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       package_name:
-        description: Package name (optional, e.g. com.varga.app)
+        description: Package name (optional)
         required: false
         type: string
 permissions:
@@ -18,8 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: Download APK
         env:
           APK_URL: ${{ inputs.apk_url }}
@@ -27,12 +26,22 @@ jobs:
           case "$APK_URL" in https://*) ;; *) echo "Only HTTPS APK URLs are allowed"; exit 1;; esac
           curl --fail --location --proto '=https' --tlsv1.2 "$APK_URL" -o app.apk
           test -s app.apk
+      - name: Detect APK package
+        run: |
+          BUILD_TOOLS=$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)
+          PACKAGE="${{ inputs.package_name }}"
+          if [ -z "$PACKAGE" ]; then
+            PACKAGE=$("$BUILD_TOOLS/aapt" dump badging app.apk | sed -n "s/^package: name='\([^']*\)'.*/\1/p" | head -1)
+          fi
+          test -n "$PACKAGE"
+          echo "PACKAGE=$PACKAGE" >> "$GITHUB_ENV"
+          echo "Package: $PACKAGE"
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-      - name: Android emulator test
+      - name: Test on Pixel 7
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
@@ -40,20 +49,15 @@ jobs:
           profile: pixel_7
           disable-animations: true
           script: |
-            adb install -r app.apk
-            PACKAGE="${{ inputs.package_name }}"
-            if [ -z "$PACKAGE" ]; then
-              PACKAGE=$(adb shell pm list packages -3 | head -n 1 | sed 's/package://g' | tr -d '\r')
-            fi
-            echo "Detected package: $PACKAGE"
             mkdir -p test-results
-            adb shell monkey -p "$PACKAGE" -c android.intent.category.LAUNCHER 1 || true
-            sleep 8
+            adb install -r app.apk
+            echo "$PACKAGE" > test-results/package.txt
+            adb shell monkey -p "$PACKAGE" -c android.intent.category.LAUNCHER 1
+            sleep 10
             adb exec-out screencap -p > test-results/screenshot.png
             adb shell uiautomator dump /sdcard/window.xml || true
             adb pull /sdcard/window.xml test-results/window.xml || true
             adb shell dumpsys window > test-results/window.txt || true
-            echo "$PACKAGE" > test-results/package.txt
       - name: Upload results
         if: always()
         uses: actions/upload-artifact@v4
