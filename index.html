@@ -1,8 +1,11 @@
 <!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Varga Android Tester</title><link rel="stylesheet" href="style.css"></head><body>
-<main><header><div><h1>Varga Android Tester</h1><p>Avvia un Android virtuale, installa una build e controlla visivamente l'app.</p></div><span class="badge">v0.1</span></header>
-<section class="grid"><article><h2>1. Ambiente Android</h2><button id="check">Controlla strumenti</button><div id="tools" class="status">Non ancora controllato.</div></article>
-<article><h2>2. Dispositivo virtuale</h2><button id="refresh">Trova dispositivi</button><select id="avd"><option>Nessun dispositivo caricato</option></select><button id="start">Avvia Android</button><div id="avdStatus" class="status"></div></article>
-<article><h2>3. Build da provare</h2><button id="pick">Scegli APK / AAB</button><div id="file" class="file">Nessun file selezionato</div><button id="install">Installa APK</button><div id="installStatus" class="status"></div></article>
-<article><h2>4. Verifica visiva</h2><p>Quando l'app è aperta nell'emulatore, salva lo schermo per controllare barre, pulsanti e layout.</p><button id="shot">Cattura screenshot</button><div id="shotStatus" class="status"></div></article></section>
-<section class="note"><strong>Obiettivo:</strong> testare Varga Cantieri senza modificarne il codice. Il tester comunica con Android tramite ADB.</section></main>
+<main><header><div><h1>Varga Android Tester</h1><p>Prepara un telefono Android virtuale, installa APK/AAB e verifica l'app.</p></div><span class="badge">v0.2</span></header>
+<section class="grid">
+<article><h2>1. Ambiente Android</h2><p class="muted">Controlla gli strumenti necessari sul computer.</p><button id="check">Controlla strumenti</button><div id="tools" class="status">Non ancora controllato.</div></article>
+<article><h2>2. Crea dispositivo</h2><div class="row"><label>Nome<input id="avdName" value="Varga_Pixel_7"></label><label>Android API<input id="api" type="number" min="30" max="36" value="35"></label></div><button id="create">Crea Pixel 7 virtuale</button><div id="createStatus" class="status"></div></article>
+<article><h2>3. Avvia Android</h2><button id="refresh">Aggiorna dispositivi</button><select id="avd"><option value="">Nessun dispositivo caricato</option></select><button id="start">Avvia e attendi Android</button><div id="avdStatus" class="status"></div></article>
+<article><h2>4. Build da provare</h2><button id="pick">Scegli APK / AAB</button><div id="file" class="file">Nessun file selezionato</div><button id="pickBundle">Seleziona bundletool.jar (solo AAB)</button><div id="bundle" class="file">bundletool non selezionato</div><button id="install">Installa build</button><div id="installStatus" class="status"></div></article>
+<article><h2>5. Apri app</h2><p class="muted">Dopo l'installazione prova ad aprire automaticamente l'app utente installata.</p><button id="launch">Rileva e apri app</button><div id="launchStatus" class="status"></div></article>
+<article><h2>6. Verifica visiva</h2><p class="muted">Cattura lo schermo reale dell'emulatore per controllare barra superiore e layout.</p><button id="shot">Cattura screenshot</button><div id="shotStatus" class="status"></div></article>
+</section><section class="note"><strong>Varga Cantieri resta separata:</strong> il tester installa ed esegue la build nel dispositivo virtuale senza modificarne il codice.</section></main>
 <script src="renderer.js"></script></body></html>
